@@ -35,7 +35,7 @@ down 8 adds 8 to your aim, resulting in a value of 10.
 forward 2 adds 2 to your horizontal position, a total of 15. Because your aim is 10, your depth increases by 2*10=20 to a total of 60.
 """
 
-data = pd.read_csv('data/example2.txt', sep=" ")
+data = pd.read_csv('data/puzzle2.txt', sep=" ")
 data['sign'] = data['step'].map({'forward': 0, 'up': -1, 'down': 1})
 data['step_vector'] = data['increment']*data['sign']
 data['aim'], data['x'], data['y'] = 0, 0, 0
@@ -44,4 +44,4 @@ data['aim'] = data['step_vector'].cumsum()
 data['step_vector'] = data['step'].map({'forward': 1}).fillna(0)*data['increment']
 data['x'] = data['step_vector'].cumsum()
 data['y'] = (data['aim']*data['step_vector']).cumsum()
-data.tail(1)
+print(f"Final product is {data.tail(1)['x']*data.tail(1)['y']}")
