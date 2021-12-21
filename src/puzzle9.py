@@ -51,3 +51,35 @@ A basin  is all the points which are directly uphill from a sink.
 Potentially: For each seed. Start from mask, and update immediate neighbors if feasible.
 Reset boundaries
 """
+
+indices = np.argwhere(high_points)
+xi1, yi1 = indices[:,0], indices[:,1]
+y_orig = np.copy(y)
+basin_sizes = np.zeros(len(xi1))
+for idx, (x1,x2) in enumerate(zip(xi1,yi1)):
+    # Set the "seed"
+    visited = []
+    to_visit = []
+    to_visit.append((x1,x2))
+    visited.append((x1,x2))
+    while to_visit:
+        x1,x2 = to_visit.pop(0)
+        if ( y[x1-1,x2] > y[x1,x2]) & (y[x1-1,x2]<9):
+            if (x1-1,x2) not in visited:
+                to_visit.append((x1-1,x2)) 
+                visited.append((x1-1,x2)) 
+        if (y[x1+1,x2] > y[x1,x2]) & (y[x1+1,x2]<9):
+            if (x1+1,x2) not in visited:
+                to_visit.append((x1+1,x2)) 
+                visited.append((x1+1,x2)) 
+        if (y[x1,x2-1] > y[x1,x2]) & (y[x1,x2-1]<9):
+            if (x1,x2-1) not in visited:
+                to_visit.append((x1,x2-1))
+                visited.append((x1,x2-1))
+        if (y[x1,x2+1] > y[x1,x2]) & (y[x1,x2+1]<9):
+            if (x1, x2+1) not in visited:
+                to_visit.append((x1,x2+1))
+                visited.append((x1,x2+1))
+    basin_sizes[idx] = len(visited)
+basin_size_product = np.product(np.sort(basin_sizes)[-3:])
+print(f"The product of the top 3 basin sizes is {basin_size_product}")
